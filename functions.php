@@ -37,6 +37,32 @@ function optimize_plugin_queries() {
 }
 add_action('plugins_loaded', 'optimize_plugin_queries');
 
+// ACF翻訳読み込みのタイミング修正（WordPress 6.7.0対応）
+function fix_acf_textdomain_timing() {
+    // ACFプラグインが有効な場合のみ実行
+    if (function_exists('acf_get_setting') || class_exists('ACF')) {
+        // 翻訳ファイルの読み込みをinitアクション以降に遅延
+        add_action('init', function() {
+            // ACFの翻訳ファイルの読み込み
+            if (function_exists('load_plugin_textdomain')) {
+                // プラグインディレクトリ内のlanguagesフォルダから翻訳を読み込み
+                $acf_plugin_path = WP_PLUGIN_DIR . '/advanced-custom-fields-pro';
+                if (is_dir($acf_plugin_path)) {
+                    load_plugin_textdomain('acf', false, 'advanced-custom-fields-pro/languages');
+                }
+            }
+        }, 5);
+        
+        // テーマ内のACF翻訳ファイルがある場合の対応
+        add_action('after_setup_theme', function() {
+            if (function_exists('load_theme_textdomain')) {
+                load_theme_textdomain('acf', get_template_directory() . '/languages');
+            }
+        });
+    }
+}
+add_action('plugins_loaded', 'fix_acf_textdomain_timing');
+
 function is_active_plugin($path){
 	$active_plugins = get_option('active_plugins');
 	if(is_array($active_plugins)) {
