@@ -970,24 +970,32 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-$dom = phpQuery::newDocument($html);
-
-$table_data = $dom->find('table.table01');
-
-$articleDate = array(); // 配列を初期化
-
-foreach( $dom["table.table01 tr"] as $value)
-            { 
-			
-			//echo $value;
-			
-             // get table rows    
-             $articleDate[]  .= pq($value)->find('th:eq(0)')->text() . ' '.pq($value)->find('td:eq(0)')->text();  // maybe first:a or something - don't know
-
+try {
+    $dom = phpQuery::newDocument($html);
+    
+    $table_data = $dom->find('table.table01');
+    
+    $articleDate = array(); // 配列を初期化
+    
+    if (!empty($dom["table.table01 tr"])) {
+        foreach( $dom["table.table01 tr"] as $value) { 
+            //echo $value;
+            
+            // get table rows    
+            $th_text = pq($value)->find('th:eq(0)')->text();
+            $td_text = pq($value)->find('td:eq(0)')->text();
+            if (!empty($th_text) || !empty($td_text)) {
+                $articleDate[] = trim($th_text . ' ' . $td_text);
             }
-
-	 return $articleDate;
-	}
+        }
+    }
+    
+    return $articleDate;
+} catch (Exception $e) {
+    // エラーが発生した場合は空の配列を返す
+    return array();
+}
+}
 
 // Ayusaの日程セレクト生成
 function add_ayusa_seminar_list( $children, $atts ) {
@@ -1020,19 +1028,30 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-$dom = phpQuery::newDocument($html);
-
-$table_data = $dom->find('table.table01');
-
-$articleDate = array(); // 配列を初期化
-
-foreach( $dom["table.table01 tr"] as $value)
-            { 
-             // get table rows    
-             $articleDate[]  .= pq($value)->find('th:eq(0)')->text() . ' '.pq($value)->find('td:eq(0)')->text();  // maybe first:a or something - don't know
+try {
+    $dom = phpQuery::newDocument($html);
+    
+    $table_data = $dom->find('table.table01');
+    
+    $articleDate = array(); // 配列を初期化
+    
+    if (!empty($dom["table.table01 tr"])) {
+        foreach( $dom["table.table01 tr"] as $value) { 
+            // get table rows    
+            $th_text = pq($value)->find('th:eq(0)')->text();
+            $td_text = pq($value)->find('td:eq(0)')->text();
+            if (!empty($th_text) || !empty($td_text)) {
+                $articleDate[] = trim($th_text . ' ' . $td_text);
             }
-	 return $articleDate;
-	}
+        }
+    }
+    
+    return $articleDate;
+} catch (Exception $e) {
+    // エラーが発生した場合は空の配列を返す
+    return array();
+}
+}
 
 
 // Ayusaの日程セレクト生成
@@ -1070,19 +1089,30 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-$dom = phpQuery::newDocument($html);
-
-$table_data = $dom->find('table.table01');
-
-$articleDate = array(); // 配列を初期化
-
-foreach( $dom["table.table01 tr"] as $value)
-            { 
-             // get table rows    
-             $articleDate[]  .= pq($value)->find('th:eq(0)')->text() . ' '.pq($value)->find('td:eq(0)')->text();  // maybe first:a or something - don't know
+try {
+    $dom = phpQuery::newDocument($html);
+    
+    $table_data = $dom->find('table.table01');
+    
+    $articleDate = array(); // 配列を初期化
+    
+    if (!empty($dom["table.table01 tr"])) {
+        foreach( $dom["table.table01 tr"] as $value) { 
+            // get table rows    
+            $th_text = pq($value)->find('th:eq(0)')->text();
+            $td_text = pq($value)->find('td:eq(0)')->text();
+            if (!empty($th_text) || !empty($td_text)) {
+                $articleDate[] = trim($th_text . ' ' . $td_text);
             }
-	 return $articleDate;
-	}
+        }
+    }
+    
+    return $articleDate;
+} catch (Exception $e) {
+    // エラーが発生した場合は空の配列を返す
+    return array();
+}
+}
 
 
 // Ayusaの日程セレクト生成
@@ -1126,29 +1156,37 @@ curl_close($ch);
 // JSONデータをデコード
 $data = json_decode($response, true);
 
+// 配列を初期化
+$articleDate = array();
+
+// 曜日を日本語で表示するための配列
+$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
 foreach($data['records'] as $value){
 	
 	$dateTime = new DateTime($value['date']);
 	setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
 	
-	// 曜日を日本語で表示するための配列
-//$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-// 曜日を取得し、配列から対応する日本語を割り当てる
-$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
-$japaneseWeekday = $weekdays[$weekdayNum];
+	// 曜日を取得し、配列から対応する日本語を割り当てる
+	$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
+	$japaneseWeekday = $weekdays[$weekdayNum];
 
-//日時
-$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
-//echo $formattedDate;
+	//日時
+	$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
+	//echo $formattedDate;
 
-// 正規表現パターン: 【と】で囲まれた任意の文字列
-$pattern = "/(【.*?】)/";
+	// 正規表現パターン: 【と】で囲まれた任意の文字列
+	$pattern = "/(【.*?】)/";
 
-// preg_match_all関数で全てのマッチする部分を抽出
-preg_match_all($pattern, $value['content'], $matches);
-$desc = $matches[1][0];
-//echo $desc;
-$articleDate[]  .=$desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+	// preg_match_all関数で全てのマッチする部分を抽出
+	preg_match_all($pattern, $value['content'], $matches);
+	
+	// マッチした結果がある場合のみ処理
+	if (!empty($matches[1])) {
+		$desc = $matches[1][0];
+		//echo $desc;
+		$articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+	}
 
 	}
 //print_r($data);
@@ -1173,29 +1211,37 @@ curl_close($ch);
 // JSONデータをデコード
 $data = json_decode($response, true);
 
+// 配列を初期化
+$articleDate = array();
+
+// 曜日を日本語で表示するための配列
+$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
 foreach($data['records'] as $value){
 	
 	$dateTime = new DateTime($value['date']);
 	setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
 	
-	// 曜日を日本語で表示するための配列
-//$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-// 曜日を取得し、配列から対応する日本語を割り当てる
-$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
-$japaneseWeekday = $weekdays[$weekdayNum];
+	// 曜日を取得し、対応する日本語を割り当てる
+	$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
+	$japaneseWeekday = $weekdays[$weekdayNum];
 
-//日時
-$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
-//echo $formattedDate;
+	//日時
+	$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
+	//echo $formattedDate;
 
-// 正規表現パターン: 【と】で囲まれた任意の文字列
-$pattern = "/(【.*?】)/";
+	// 正規表現パターン: 【と】で囲まれた任意の文字列
+	$pattern = "/(【.*?】)/";
 
-// preg_match_all関数で全てのマッチする部分を抽出
-preg_match_all($pattern, $value['content'], $matches);
-$desc = $matches[1][0];
-//echo $desc;
-$articleDate[]  .=$desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+	// preg_match_all関数で全てのマッチする部分を抽出
+	preg_match_all($pattern, $value['content'], $matches);
+	
+	// マッチした結果がある場合のみ処理
+	if (!empty($matches[1])) {
+		$desc = $matches[1][0];
+		//echo $desc;
+		$articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+	}
 
 	}
 /*	if(is_user_logged_in()){
