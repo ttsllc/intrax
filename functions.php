@@ -963,10 +963,19 @@ function contact_validation2($Validation, $data, $Data){
 require_once(get_template_directory().'/lib/phpQuery-onefile.php');
 function get_ayusa_schedule(){
 $url = 'https://www.intraxjp.com/ayusa/';
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+
+// ファイルの取得に失敗した場合や空の場合は空の配列を返す
+if ($html === false || empty($html)) {
+    return array();
+}
+
 $dom = phpQuery::newDocument($html);
 
 $table_data = $dom->find('table.table01');
+
+$articleDate = array(); // 配列を初期化
+
 foreach( $dom["table.table01 tr"] as $value)
             { 
 			
@@ -986,9 +995,14 @@ function add_ayusa_seminar_list( $children, $atts ) {
     if ( 'ayusa_seminar_date' == $atts['name'] ) {
 $sche = get_ayusa_schedule();
 //$children['']= '';
-foreach($sche as $val){
-	$children[$val] = $val;
-	}
+
+// スケジュールが空でない場合のみ処理
+if (!empty($sche) && is_array($sche)) {
+    foreach($sche as $val){
+        $children[$val] = $val;
+    }
+}
+
   array_unshift($children,'');
     }
 
@@ -999,10 +1013,18 @@ add_filter( 'mwform_choices_mw-wp-form-4604', 'add_ayusa_seminar_list', 1, 2 );
 
 function get_hostfamily_schedule(){
 $url = 'https://www.intraxjp.com/ayusa/hostfamily/';
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+
+// ファイルの取得に失敗した場合や空の場合は空の配列を返す
+if ($html === false || empty($html)) {
+    return array();
+}
+
 $dom = phpQuery::newDocument($html);
 
 $table_data = $dom->find('table.table01');
+
+$articleDate = array(); // 配列を初期化
 
 foreach( $dom["table.table01 tr"] as $value)
             { 
@@ -1020,9 +1042,12 @@ $sche = get_hostfamily_schedule();
 
 //$children['']= '';
 
-foreach($sche as $val){
-	$children[$val] = $val;
-	}
+// スケジュールが空でない場合のみ処理
+if (!empty($sche) && is_array($sche)) {
+    foreach($sche as $val){
+        $children[$val] = $val;
+    }
+}
 
   array_unshift($children,'');
 
@@ -1038,10 +1063,18 @@ add_filter( 'mwform_choices_mw-wp-form-4604', 'add_hostfamily_seminar_list', 1, 
 
 function get_springcamp2025_schedule(){
 $url = 'https://www.intraxjp.com/springcamp2025/';
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+
+// ファイルの取得に失敗した場合や空の場合は空の配列を返す
+if ($html === false || empty($html)) {
+    return array();
+}
+
 $dom = phpQuery::newDocument($html);
 
 $table_data = $dom->find('table.table01');
+
+$articleDate = array(); // 配列を初期化
 
 foreach( $dom["table.table01 tr"] as $value)
             { 
@@ -1059,9 +1092,12 @@ $sche = get_springcamp2025_schedule();
 
 //$children['']= '';
 
-foreach($sche as $val){
-	$children[$val] = $val;
-	}
+// スケジュールが空でない場合のみ処理
+if (!empty($sche) && is_array($sche)) {
+    foreach($sche as $val){
+        $children[$val] = $val;
+    }
+}
 
   array_unshift($children,'');
 

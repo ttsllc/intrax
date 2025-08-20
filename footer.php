@@ -58,9 +58,9 @@ $current_page_id = get_the_ID();
 $parent_page_id = wp_get_post_parent_id( $current_page_id );
 if($current_page_id==6215 or $parent_page_id==6215){
 ?>
-<script src="<?php echo get_template_directory_uri(); ?>/js/common_form.js?<?php echo date();?>"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/js/common_form.js"></script>
 <?php }elseif($current_page_id==9577 or $parent_page_id==9577){ ?>
-<script src="<?php echo get_template_directory_uri(); ?>/js/common_form_test.js?<?php echo date();?>"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/js/common_form_test.js"></script>
 <?php }?>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/img_change.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/add.js"></script>
