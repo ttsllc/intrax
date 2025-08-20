@@ -1112,262 +1112,307 @@ function safe_html_parse($html, $selector) {
 }
 
 function get_ayusa_schedule(){
-$url = 'https://www.intraxjp.com/ayusa/';
-$html = @file_get_contents($url);
-
-// ファイルの取得に失敗した場合や空の場合は空の配列を返す
-if ($html === false || empty($html)) {
-    return array();
-}
-
-// 安全なHTML解析を使用
-$rows = safe_html_parse($html, 'table.table01 tr');
-$articleDate = array();
-
-foreach ($rows as $row_text) {
-    if (!empty($row_text)) {
-        $articleDate[] = $row_text;
+    $url = 'https://www.intraxjp.com/ayusa/';
+    
+    // WordPress標準APIを使用（安全ガード付き）
+    $response = wp_remote_get($url, array(
+        'timeout' => 3,
+        'redirection' => 3
+    ));
+    
+    // 取得失敗時は即抜け
+    if (is_wp_error($response)) {
+        return array();
     }
-}
-
-return $articleDate;
+    
+    $code = wp_remote_retrieve_response_code($response);
+    if ($code !== 200) {
+        return array(); // 404/500 などは処理しない
+    }
+    
+    $html = wp_remote_retrieve_body($response);
+    if (empty($html)) {
+        return array();
+    }
+    
+    // 安全なHTML解析を使用
+    $rows = safe_html_parse($html, 'table.table01 tr');
+    $articleDate = array(); // 変数初期化
+    
+    if (!empty($rows) && is_array($rows)) {
+        foreach ($rows as $row_text) {
+            if (!empty($row_text)) {
+                $articleDate[] = $row_text;
+            }
+        }
+    }
+    
+    return $articleDate;
 }
 
 // Ayusaの日程セレクト生成
 function add_ayusa_seminar_list( $children, $atts ) {
-
     if ( 'ayusa_seminar_date' == $atts['name'] ) {
-$sche = get_ayusa_schedule();
-//$children['']= '';
-
-// スケジュールが空でない場合のみ処理
-if (!empty($sche) && is_array($sche)) {
-    foreach($sche as $val){
-        $children[$val] = $val;
+        $sche = get_ayusa_schedule();
+        
+        // スケジュールが空でない場合のみ処理
+        if (!empty($sche) && is_array($sche)) {
+            foreach($sche as $val){
+                $children[$val] = $val;
+            }
+        }
+        
+        array_unshift($children,'');
     }
-}
-
-  array_unshift($children,'');
-    }
-
+    
     return $children;
 }
 add_filter( 'mwform_choices_mw-wp-form-4604', 'add_ayusa_seminar_list', 1, 2 ); 
 //Ayusa日程生成ここまで
 
 function get_hostfamily_schedule(){
-$url = 'https://www.intraxjp.com/ayusa/hostfamily/';
-$html = @file_get_contents($url);
-
-// ファイルの取得に失敗した場合や空の場合は空の配列を返す
-if ($html === false || empty($html)) {
-    return array();
-}
-
-// 安全なHTML解析を使用
-$rows = safe_html_parse($html, 'table.table01 tr');
-$articleDate = array();
-
-foreach ($rows as $row_text) {
-    if (!empty($row_text)) {
-        $articleDate[] = $row_text;
+    $url = 'https://www.intraxjp.com/ayusa/hostfamily/';
+    
+    // WordPress標準APIを使用（安全ガード付き）
+    $response = wp_remote_get($url, array(
+        'timeout' => 3,
+        'redirection' => 3
+    ));
+    
+    // 取得失敗時は即抜け
+    if (is_wp_error($response)) {
+        return array();
     }
+    
+    $code = wp_remote_retrieve_response_code($response);
+    if ($code !== 200) {
+        return array(); // 404/500 などは処理しない
+    }
+    
+    $html = wp_remote_retrieve_body($response);
+    if (empty($html)) {
+        return array();
+    }
+    
+    // 安全なHTML解析を使用
+    $rows = safe_html_parse($html, 'table.table01 tr');
+    $articleDate = array(); // 変数初期化
+    
+    if (!empty($rows) && is_array($rows)) {
+        foreach ($rows as $row_text) {
+            if (!empty($row_text)) {
+                $articleDate[] = $row_text;
+            }
+        }
+    }
+    
+    return $articleDate;
 }
-
-return $articleDate;
-}
-
 
 // Ayusaの日程セレクト生成
 function add_hostfamily_seminar_list( $children, $atts ) {
     if ( 'hostfamily_seminar_date' == $atts['name'] ) {
-$sche = get_hostfamily_schedule();
-
-//$children['']= '';
-
-// スケジュールが空でない場合のみ処理
-if (!empty($sche) && is_array($sche)) {
-    foreach($sche as $val){
-        $children[$val] = $val;
+        $sche = get_hostfamily_schedule();
+        
+        // スケジュールが空でない場合のみ処理
+        if (!empty($sche) && is_array($sche)) {
+            foreach($sche as $val){
+                $children[$val] = $val;
+            }
+        }
+        
+        array_unshift($children,'');
     }
-}
-
-  array_unshift($children,'');
-
-    }
-
+    
     return $children;
 }
 add_filter( 'mwform_choices_mw-wp-form-4604', 'add_hostfamily_seminar_list', 1, 2 ); 
 //hostfamily日程生成ここまで
 
-
-
-
 function get_springcamp2025_schedule(){
-$url = 'https://www.intraxjp.com/springcamp2025/';
-$html = @file_get_contents($url);
-
-// ファイルの取得に失敗した場合や空の場合は空の配列を返す
-if ($html === false || empty($html)) {
-    return array();
-}
-
-// 安全なHTML解析を使用
-$rows = safe_html_parse($html, 'table.table01 tr');
-$articleDate = array();
-
-foreach ($rows as $row_text) {
-    if (!empty($row_text)) {
-        $articleDate[] = $row_text;
+    $url = 'https://www.intraxjp.com/springcamp2025/';
+    
+    // WordPress標準APIを使用（安全ガード付き）
+    $response = wp_remote_get($url, array(
+        'timeout' => 3,
+        'redirection' => 3
+    ));
+    
+    // 取得失敗時は即抜け
+    if (is_wp_error($response)) {
+        return array();
     }
+    
+    $code = wp_remote_retrieve_response_code($response);
+    if ($code !== 200) {
+        return array(); // 404/500 などは処理しない
+    }
+    
+    $html = wp_remote_retrieve_body($response);
+    if (empty($html)) {
+        return array();
+    }
+    
+    // 安全なHTML解析を使用
+    $rows = safe_html_parse($html, 'table.table01 tr');
+    $articleDate = array(); // 変数初期化
+    
+    if (!empty($rows) && is_array($rows)) {
+        foreach ($rows as $row_text) {
+            if (!empty($row_text)) {
+                $articleDate[] = $row_text;
+            }
+        }
+    }
+    
+    return $articleDate;
 }
-
-return $articleDate;
-}
-
 
 // Ayusaの日程セレクト生成
 function add_springcamp2025_seminar_list( $children, $atts ) {
     if ( 'springcamp2025_seminar_date' == $atts['name'] ) {
-$sche = get_springcamp2025_schedule();
-
-//$children['']= '';
-
-// スケジュールが空でない場合のみ処理
-if (!empty($sche) && is_array($sche)) {
-    foreach($sche as $val){
-        $children[$val] = $val;
+        $sche = get_springcamp2025_schedule();
+        
+        // スケジュールが空でない場合のみ処理
+        if (!empty($sche) && is_array($sche)) {
+            foreach($sche as $val){
+                $children[$val] = $val;
+            }
+        }
+        
+        array_unshift($children,'');
     }
-}
-
-  array_unshift($children,'');
-
-    }
-
+    
     return $children;
 }
 add_filter( 'mwform_choices_mw-wp-form-4604', 'add_springcamp2025_seminar_list', 1, 2 ); 
-//hostfamily日程生成ここまで
+//springcamp2025日程生成ここまで
 
 
 
 //オペアReactの画面から日程取得
 function get_aupairReact_schedule(){
-//$url = 'https://aupair.intraxjp.com/';
-// APIのURL
-$url = 'https://api-aupaircare.intraxjp.com/api/v1/calendars/current';
+    //$url = 'https://aupair.intraxjp.com/';
+    // APIのURL
+    $url = 'https://api-aupaircare.intraxjp.com/api/v1/calendars/current';
 
-// cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
-$response = curl_exec($ch);
-curl_close($ch);
+    // cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-// JSONデータをデコード
-$data = json_decode($response, true);
+    // JSONデータをデコード
+    $data = json_decode($response, true);
 
-// 配列を初期化
-$articleDate = array();
+    // 配列を初期化
+    $articleDate = array();
 
-// 曜日を日本語で表示するための配列
-$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+    // 曜日を日本語で表示するための配列
+    $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
-foreach($data['records'] as $value){
-	
-	$dateTime = new DateTime($value['date']);
-	setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
-	
-	// 曜日を取得し、配列から対応する日本語を割り当てる
-	$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
-	$japaneseWeekday = $weekdays[$weekdayNum];
+    // データの存在確認と安全ガード
+    if (!empty($data) && isset($data['records']) && is_array($data['records'])) {
+        foreach($data['records'] as $value){
+            if (!isset($value['date']) || !isset($value['content']) || !isset($value['timeFrom']) || !isset($value['timeTo'])) {
+                continue; // 必要なデータが不足している場合はスキップ
+            }
+            
+            $dateTime = new DateTime($value['date']);
+            setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
+            
+            // 曜日を取得し、配列から対応する日本語を割り当てる
+            $weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
+            $japaneseWeekday = $weekdays[$weekdayNum];
 
-	//日時
-	$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
-	//echo $formattedDate;
+            //日時
+            $formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
+            //echo $formattedDate;
 
-	// 正規表現パターン: 【と】で囲まれた任意の文字列
-	$pattern = "/(【.*?】)/";
+            // 正規表現パターン: 【と】で囲まれた任意の文字列
+            $pattern = "/(【.*?】)/";
 
-	// preg_match_all関数で全てのマッチする部分を抽出
-	preg_match_all($pattern, $value['content'], $matches);
-	
-	// マッチした結果がある場合のみ処理
-	if (!empty($matches[1])) {
-		$desc = $matches[1][0];
-		//echo $desc;
-		$articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
-	}
-
-	}
-//print_r($data);
-return $articleDate;
-
-	}
-
+            // preg_match_all関数で全てのマッチする部分を抽出
+            preg_match_all($pattern, $value['content'], $matches);
+            
+            // マッチした結果がある場合のみ処理
+            if (!empty($matches[1]) && isset($matches[1][0])) {
+                $desc = $matches[1][0];
+                //echo $desc;
+                $articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+            }
+        }
+    }
+    
+    //print_r($data);
+    return $articleDate;
+}
 
 //オペアReactの画面から日程取得
 function get_worktravelReact_schedule(){
-//$url = 'https://aupair.intraxjp.com/';
-// APIのURL
-$url = 'https://api-worktravel.intraxjp.com/api/v1/briefings/public';
+    //$url = 'https://aupair.intraxjp.com/';
+    // APIのURL
+    $url = 'https://api-worktravel.intraxjp.com/api/v1/briefings/public';
 
-// cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
-$response = curl_exec($ch);
-curl_close($ch);
+    // cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-// JSONデータをデコード
-$data = json_decode($response, true);
+    // JSONデータをデコード
+    $data = json_decode($response, true);
 
-// 配列を初期化
-$articleDate = array();
+    // 配列を初期化
+    $articleDate = array();
 
-// 曜日を日本語で表示するための配列
-$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+    // 曜日を日本語で表示するための配列
+    $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
-foreach($data['records'] as $value){
-	
-	$dateTime = new DateTime($value['date']);
-	setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
-	
-	// 曜日を取得し、対応する日本語を割り当てる
-	$weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
-	$japaneseWeekday = $weekdays[$weekdayNum];
+    // データの存在確認と安全ガード
+    if (!empty($data) && isset($data['records']) && is_array($data['records'])) {
+        foreach($data['records'] as $value){
+            if (!isset($value['date']) || !isset($value['content']) || !isset($value['timeFrom']) || !isset($value['timeTo'])) {
+                continue; // 必要なデータが不足している場合はスキップ
+            }
+            
+            $dateTime = new DateTime($value['date']);
+            setlocale(LC_TIME, 'ja_JP.UTF-8'); // 日本語のロケールを設定
+            
+            // 曜日を取得し、対応する日本語を割り当てる
+            $weekdayNum = $dateTime->format('w'); // 0:日曜日, 1:月曜日, ...
+            $japaneseWeekday = $weekdays[$weekdayNum];
 
-	//日時
-	$formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
-	//echo $formattedDate;
+            //日時
+            $formattedDate = strftime("%m月%d日(%a)", $dateTime->getTimestamp());
+            //echo $formattedDate;
 
-	// 正規表現パターン: 【と】で囲まれた任意の文字列
-	$pattern = "/(【.*?】)/";
+            // 正規表現パターン: 【と】で囲まれた任意の文字列
+            $pattern = "/(【.*?】)/";
 
-	// preg_match_all関数で全てのマッチする部分を抽出
-	preg_match_all($pattern, $value['content'], $matches);
-	
-	// マッチした結果がある場合のみ処理
-	if (!empty($matches[1])) {
-		$desc = $matches[1][0];
-		//echo $desc;
-		$articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
-	}
-
-	}
-/*	if(is_user_logged_in()){
-print_r($data);
-	}*/
-return $articleDate;
-
-	}
+            // preg_match_all関数で全てのマッチする部分を抽出
+            preg_match_all($pattern, $value['content'], $matches);
+            
+            // マッチした結果がある場合のみ処理
+            if (!empty($matches[1]) && isset($matches[1][0])) {
+                $desc = $matches[1][0];
+                //echo $desc;
+                $articleDate[] = $desc.' '.$formattedDate.' '.$value['timeFrom'].'～'.$value['timeTo'];
+            }
+        }
+    }
+    
+    //print_r($data);
+    return $articleDate;
+}
 
 
 
