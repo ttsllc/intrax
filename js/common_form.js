@@ -152,7 +152,7 @@ function prog_check() {
     $(".setsumei").hide("slow");
 
     //説明会希望する　のチェックも外しておく
-    $('[name="setsumei_hope[data][]"]:checkbox').attr("checked", false);
+    $('[name="setsumei_hope[data][]"]:checkbox').prop("checked", false);
   }
 
   if (kobetsu_check) {
@@ -163,7 +163,7 @@ function prog_check() {
     $(".kobetsu").hide("slow");
 
     //説明会希望する　のチェックも外しておく
-    $('[name="kobetsu_hope[data][]"]:checkbox').attr("checked", false);
+    $('[name="kobetsu_hope[data][]"]:checkbox').prop("checked", false);
 
     $("tr.kobetsu_date").hide("slow");
   }
@@ -178,7 +178,7 @@ function prog_check() {
 /*
 説明会参加希望のチェックON/OFF時の制御
 */
-console.log("J1は->" + J1);
+// console.log("J1は->" + J1);
   //各日程を制御
   if (ayusa && setsumei_hope) {
     $("tr.ayusa_seminar").show("slow");
@@ -397,7 +397,7 @@ function setsumei_hope_check() {
         //$('.kobetsu').hide('slow');
 
         //説明会希望する　のチェックも外しておく
-        $('[name="kobetsu_hope[data][]"]:checkbox').attr("checked", false);
+        $('[name="kobetsu_hope[data][]"]:checkbox').prop("checked", false);
         kobetsu_hope_check();
 
         // $('tr.kobetsu_date').hide('slow');
@@ -443,7 +443,7 @@ function kobetsu_hope_check() {
     //説明会側のチェックを外して、チェックfunction実行
 
     //チェック外す
-    $('[name="setsumei_hope[data][]"]:checkbox').attr("checked", false);
+    $('[name="setsumei_hope[data][]"]:checkbox').prop("checked", false);
 
     //各説明会の選択値を空白に
     $('[name="ayusa_seminar_date"] option:first').prop("selected", true);
@@ -473,7 +473,7 @@ function hope_check() {
     $("tr.doc_type").show("slow");
     $("tr.hope").show("slow");
   } else {
-    $('[name="doc_type[data][]"]:checkbox').attr("checked", false);
+    $('[name="doc_type[data][]"]:checkbox').prop("checked", false);
     $("tr.doc_type").hide("slow");
   }
 
