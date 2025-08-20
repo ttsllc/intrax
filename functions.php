@@ -4,6 +4,39 @@
 @ini_set('log_errors', 0);
 @error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
+// データベースクエリの最適化設定
+@ini_set('mysql.connect_timeout', 60);
+@ini_set('default_socket_timeout', 60);
+
+// データベースクエリのキャッシュ最適化
+function optimize_database_queries() {
+    // オブジェクトキャッシュの有効化
+    if (!wp_using_ext_object_cache()) {
+        wp_cache_init();
+    }
+    
+    // データベースクエリの最適化
+    if (function_exists('wp_cache_add_global_groups')) {
+        wp_cache_add_global_groups(array('users', 'userlogins', 'usermeta', 'user_meta', 'site-transient', 'site-options', 'site-lookup', 'blog-lookup', 'blog-details', 'rss'));
+    }
+}
+add_action('init', 'optimize_database_queries');
+
+// プラグインのクエリ最適化
+function optimize_plugin_queries() {
+    // Wordfenceのクエリ最適化
+    if (class_exists('wordfence')) {
+        @ini_set('wordfence.maxExecutionTime', 30);
+    }
+    
+    // AIOSEOのクエリ最適化
+    if (class_exists('AIOSEO')) {
+        @ini_set('aioseo.cache.enabled', 1);
+        @ini_set('aioseo.cache.duration', 3600);
+    }
+}
+add_action('plugins_loaded', 'optimize_plugin_queries');
+
 function is_active_plugin($path){
 	$active_plugins = get_option('active_plugins');
 	if(is_array($active_plugins)) {
