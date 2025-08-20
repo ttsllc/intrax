@@ -21,7 +21,7 @@
   function gtag(){window.dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-X68632K5NZs',{
+  gtag('config', 'G-X68632K5NZ',{
   'custom_dimensions': {
     '1': 'トラフィックソース'
   }
@@ -36,8 +36,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- <script href="<php echo get_template_directory_uri(); ?>/js/common_form.js"></script>-->
 <!--for common form-->
-    <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/css/common_form.css?<?php echo date();?>">
-	<link rel="stylesheet" type="text/javascript" href="<?php echo get_template_directory_uri(); ?>/js/jquery.accessible.js" />
+    <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/css/common_form.css">
+	<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/jquery.accessible.js"></script>
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

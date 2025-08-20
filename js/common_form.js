@@ -137,12 +137,10 @@ function prog_check() {
   });
 
   //教師派遣orボラんてぃア（タイ）は、個別説明受付
-if(volunteer || teacher || ayusa_summer) 
-{
-  kobetsu_check = true;
-$("tr.hope").hide('slow');
-
-}
+  if(volunteer || teacher || ayusa_summer) {
+    kobetsu_check = true;
+    $("tr.hope").hide('slow');
+  }
 
 
 
@@ -180,7 +178,7 @@ $("tr.hope").hide('slow');
 /*
 説明会参加希望のチェックON/OFF時の制御
 */
-console.log("J1は->".J1);
+console.log("J1は->" + J1);
   //各日程を制御
   if (ayusa && setsumei_hope) {
     $("tr.ayusa_seminar").show("slow");
