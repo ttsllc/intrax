@@ -1,0 +1,11 @@
+/*
+Theme Name:   イントラックス
+*/
+.td_cell.prog{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.td_cell.prog .mwform-checkbox-field{
+
+}

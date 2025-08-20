@@ -1,0 +1,41 @@
+
+/*
+.kasou ul.btnArea {
+	text-align: center;
+	font-size: 0px;
+}
+.kasou ul.btnArea li {
+	display: inline-block;
+	width: 200px;
+	margin: 0 10px;
+}
+*/
+
+
+.k_contct_submit_btn {
+	display: block;
+	width: 200px;
+	height: 48px;
+	line-height: 48px;
+	padding: 0px 0 0px;
+	margin: 0 0 0 0;
+
+	color: #72a810;
+	background: #fff;
+	border: 1px solid #72a810;
+	font-weight: bold;
+	position: relative;
+	font-size: 15px;
+	text-decoration: none;
+	text-align: center;
+	font-family: 'Barlow Condensed', sans-serif;
+	border-radius: 3px;
+	box-shadow:0px 13px 24px 11px rgba(0,0,0,0.04);
+}
+
+
+.kasou ul.btnArea li:last-child input[type="submit"] {
+	color: #fff;
+	background: #72a810;
+}
+

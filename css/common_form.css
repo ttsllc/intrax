@@ -1,0 +1,196 @@
+@charset "utf-8";
+/* CSS Document */
+/* アコーディオンA */
+.ac-box{
+width: auto;
+margin: 30px auto 5px;
+}
+
+/*ラベル*/
+.ac-box label{
+max-width: 385px;
+font-size: 16px;
+font-weight: bold;
+text-align: center;
+background: #f05689;
+margin: auto;
+line-height: 50px;
+position: relative;
+display: block;
+height: 50px;
+border-radius: 8px;
+cursor: pointer;
+color: #fff;
+transition: all 0.5s;
+}
+
+/*ラベルホバー時*/
+.ac-box label:hover{
+background: rgba( 240, 86, 137, 0.55 );
+-webkit-transition: all .3s;
+transition: all .3s;
+}
+
+/*チェックを隠す*/
+.ac-box input{
+display: none;
+}
+
+/*チェックのアイコン（↓）*/
+.ac-box label:after{
+color: #fff;
+font-family:"FontAwesome";
+content:" \f078";
+}
+
+/*チェックのアイコン（↑）*/
+.ac-box input:checked ~ label::after {
+color: #fff;
+font-family:"FontAwesome";
+content:" \f077";
+}
+
+/*中身を非表示にしておく*/
+.ac-box div{
+height: 0px;
+padding: 0px;
+overflow: hidden;
+opacity: 0;
+transition: 0.5s;
+}
+
+/*クリックで中身を表示*/
+.ac-box input:checked ~ div{
+height: auto;
+padding: 5px;
+background: #eaeaea;
+opacity: 1;
+}
+
+/*表示内容の調整*/
+.ac-box div p{
+color: #777;
+line-height: 23px;
+font-size: 14px;
+padding: 20px;
+text-align: justify;
+}
+
+.ac-small p{
+margin-bottom: 0px;
+}
+
+/*条件付き表示項目　デフォルト非表示*/
+.setsumei,
+.kobetsu,
+tr.kobetsu_date,
+tr.ayusa_seminar,
+tr.aupair_seminar,
+tr.work_travel_seminar,
+tr.intern_us_seminar,
+tr.hostfamily_seminar,
+tr.j1_seminar,
+tr.teacher_seminar,
+tr.intern_seminar,
+tr.thai_volunteer,
+tr.springcamp2025_seminar_date,
+tr.summer_camp_seminar_date,
+tr.doc_type,
+.kari,
+.aupair_kari_howto
+{
+	display:none;
+}
+
+.header{
+	background:#D2E9D1;
+}
+
+tr.kari th.header{
+	background:#ff78b1;
+	color:#fff;
+}
+
+/*ローディング画面　ここから*/
+/* ブラウザのスクロールバーを常に表示させることでカクカクッとなるのを防ぐ */
+html{
+  overflow-y:scroll;
+}
+
+div#Loading{
+text-align: center;
+    /* width: 100%; */
+    /* position: absolute; */
+    background: #1bb;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding-top: 10em;}
+	
+/* ローディングのアニメーション部分のCSS (https://projects.lukehaas.me/css-loaders/) */
+.loader-animation,
+.loader-animation:before,
+.loader-animation:after {
+  background:#ffffff;
+  -webkit-animation:load1 1s infinite ease-in-out;
+  animation:load1 1s infinite ease-in-out;
+  width:1em;
+  height:4em;
+}
+.loader-animation {
+  height:10px;
+  left:50%;
+  margin:-5px 0 0 -5px;
+  position:absolute;
+  top:50%;
+  width:10px;
+  color:#ffffff;
+  text-indent:-9999em;
+  font-size:10px;
+  -webkit-transform:translateZ(0);
+  -ms-transform:translateZ(0);
+  transform:translateZ(0);
+  -webkit-animation-delay:-0.16s;
+  animation-delay:-0.16s;
+}
+.loader-animation:before,
+.loader-animation:after {
+  position:absolute;
+  top:0;
+  content:'';
+}
+.loader-animation:before {
+  left:-1.5em;
+  -webkit-animation-delay:-0.32s;
+  animation-delay:-0.32s;
+}
+.loader-animation:after {
+  left:1.5em;
+}
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow:0 0;
+    height:4em;
+  }
+  40% {
+    box-shadow:0 -2em;
+    height:5em;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow:0 0;
+    height:4em;
+  }
+  40% {
+    box-shadow:0 -2em;
+    height:5em;
+  }
+}

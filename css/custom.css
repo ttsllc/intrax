@@ -1,0 +1,62 @@
+
+/*コロナウイルス案内*/
+@media screen and (min-width: 570px) {
+  .message {
+    clear: both;
+    margin: -50px auto 80px;
+    padding: 10px 10px;
+    border: #72A810 dotted 3px;
+    border-radius: 5px;
+    text-align: center;
+    max-width: 960px;
+/*    width: 100%;*/
+    font-weight: 800;
+    background-color: #fff;
+    font-size: 1.2em;
+    letter-spacing: 0.05em;
+    line-height: 2em;;
+  }
+
+  .message a {
+    color: #72A810;
+    font-weight: 1000;
+  }
+}
+
+@media screen and (max-width: 569px)  {
+  .message {
+    clear: both;
+    margin: -50px auto 50px;
+    padding: 10px 10px;
+    border: #72A810 dotted 3px;
+    border-radius: 5px;
+    text-align: left;
+    max-width: 90%;
+    
+    width: 100%;
+    font-size: 0.9em;
+    font-weight: 800;
+
+  }
+
+  .message a {
+    color: #72A810;
+    font-weight: 1000;
+  }
+}
+/* end コロナウイルス案内*/
+
+
+/*お問い合わせフォーム*/
+.text1 {
+	text-align: center;
+	font-size: .9rem;
+	margin-bottom: 50px;
+}
+
+
+.color-red {
+  text-decoration: underline;
+  color: #FF0000;
+  text-decoration-color: #0059ff; 
+}
