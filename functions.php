@@ -8,6 +8,11 @@
 @ini_set('mysql.connect_timeout', 60);
 @ini_set('default_socket_timeout', 60);
 
+// データベースクエリのパフォーマンス最適化
+@ini_set('mysql.query_cache_size', '32M');
+@ini_set('mysql.query_cache_type', 1);
+@ini_set('mysql.query_cache_limit', '2M');
+
 // データベースクエリのキャッシュ最適化
 function optimize_database_queries() {
     // オブジェクトキャッシュの有効化
@@ -21,6 +26,22 @@ function optimize_database_queries() {
     }
 }
 add_action('init', 'optimize_database_queries');
+
+// ページキャッシュの最適化
+function optimize_page_cache() {
+    // ブラウザキャッシュの設定
+    if (!is_admin()) {
+        header('Cache-Control: public, max-age=3600'); // 1時間キャッシュ
+        header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+    }
+    
+    // 静的ファイルのキャッシュ設定
+    if (preg_match('/\.(css|js|png|jpg|jpeg|gif|ico|svg)$/', $_SERVER['REQUEST_URI'])) {
+        header('Cache-Control: public, max-age=31536000'); // 1年間キャッシュ
+        header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 31536000));
+    }
+}
+add_action('init', 'optimize_page_cache');
 
 // プラグインのクエリ最適化
 function optimize_plugin_queries() {
@@ -62,6 +83,34 @@ function fix_acf_textdomain_timing() {
     }
 }
 add_action('plugins_loaded', 'fix_acf_textdomain_timing');
+
+// ページ読み込み速度の最適化
+function optimize_page_loading_speed() {
+    // 不要なスクリプトとスタイルの削除
+    if (!is_admin()) {
+        // WordPressのバージョン情報を削除
+        remove_action('wp_head', 'wp_generator');
+        
+        // 絵文字関連のスクリプトを削除
+        remove_action('wp_head', 'print_emoji_detection_script', 7);
+        remove_action('wp_print_styles', 'print_emoji_styles');
+        
+        // REST APIリンクを削除
+        remove_action('wp_head', 'rest_output_link_wp_head');
+        remove_action('wp_head', 'wp_oembed_add_discovery_links');
+        remove_action('wp_head', 'wp_oembed_add_host_js');
+        
+        // 短縮URLを削除
+        remove_action('wp_head', 'wp_shortlink_wp_head');
+        
+        // RSDリンクを削除
+        remove_action('wp_head', 'rsd_link');
+        
+        // WLWマニフェストを削除
+        remove_action('wp_head', 'wlwmanifest_link');
+    }
+}
+add_action('init', 'optimize_page_loading_speed');
 
 function is_active_plugin($path){
 	$active_plugins = get_option('active_plugins');
@@ -1209,10 +1258,13 @@ function get_aupairReact_schedule(){
 // APIのURL
 $url = 'https://api-aupaircare.intraxjp.com/api/v1/calendars/current';
 
-// cURLを使用してAPIからデータを取得
+// cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
 $response = curl_exec($ch);
 curl_close($ch);
 
@@ -1264,10 +1316,13 @@ function get_worktravelReact_schedule(){
 // APIのURL
 $url = 'https://api-worktravel.intraxjp.com/api/v1/briefings/public';
 
-// cURLを使用してAPIからデータを取得
+// cURLを使用してAPIからデータを取得（タイムアウト設定を追加）
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒でタイムアウト
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 接続タイムアウト5秒
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL証明書の検証を無効化（開発環境用）
 $response = curl_exec($ch);
 curl_close($ch);
 
