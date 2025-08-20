@@ -1,4 +1,9 @@
 <?php
+// エラー抑制設定（phpQueryのHTML解析警告を抑制）
+@ini_set('display_errors', 0);
+@ini_set('log_errors', 0);
+@error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+
 function is_active_plugin($path){
 	$active_plugins = get_option('active_plugins');
 	if(is_array($active_plugins)) {
@@ -961,6 +966,43 @@ function contact_validation2($Validation, $data, $Data){
 
 //AyusaサイトTOPから日程を取得
 require_once(get_template_directory().'/lib/phpQuery-onefile.php');
+
+// 安全なHTML解析関数
+function safe_html_parse($html, $selector) {
+    if (empty($html)) {
+        return array();
+    }
+    
+    // HTMLの前処理（基本的なクリーンアップ）
+    $html = preg_replace('/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/mi', '', $html);
+    $html = preg_replace('/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/mi', '', $html);
+    
+    try {
+        // エラー抑制してphpQueryを実行
+        $dom = @phpQuery::newDocument($html);
+        
+        if (!$dom) {
+            return array();
+        }
+        
+        $elements = $dom->find($selector);
+        $result = array();
+        
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                $text = trim(pq($element)->text());
+                if (!empty($text)) {
+                    $result[] = $text;
+                }
+            }
+        }
+        
+        return $result;
+    } catch (Exception $e) {
+        return array();
+    }
+}
+
 function get_ayusa_schedule(){
 $url = 'https://www.intraxjp.com/ayusa/';
 $html = @file_get_contents($url);
@@ -970,31 +1012,17 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-try {
-    $dom = phpQuery::newDocument($html);
-    
-    $table_data = $dom->find('table.table01');
-    
-    $articleDate = array(); // 配列を初期化
-    
-    if (!empty($dom["table.table01 tr"])) {
-        foreach( $dom["table.table01 tr"] as $value) { 
-            //echo $value;
-            
-            // get table rows    
-            $th_text = pq($value)->find('th:eq(0)')->text();
-            $td_text = pq($value)->find('td:eq(0)')->text();
-            if (!empty($th_text) || !empty($td_text)) {
-                $articleDate[] = trim($th_text . ' ' . $td_text);
-            }
-        }
+// 安全なHTML解析を使用
+$rows = safe_html_parse($html, 'table.table01 tr');
+$articleDate = array();
+
+foreach ($rows as $row_text) {
+    if (!empty($row_text)) {
+        $articleDate[] = $row_text;
     }
-    
-    return $articleDate;
-} catch (Exception $e) {
-    // エラーが発生した場合は空の配列を返す
-    return array();
 }
+
+return $articleDate;
 }
 
 // Ayusaの日程セレクト生成
@@ -1028,29 +1056,17 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-try {
-    $dom = phpQuery::newDocument($html);
-    
-    $table_data = $dom->find('table.table01');
-    
-    $articleDate = array(); // 配列を初期化
-    
-    if (!empty($dom["table.table01 tr"])) {
-        foreach( $dom["table.table01 tr"] as $value) { 
-            // get table rows    
-            $th_text = pq($value)->find('th:eq(0)')->text();
-            $td_text = pq($value)->find('td:eq(0)')->text();
-            if (!empty($th_text) || !empty($td_text)) {
-                $articleDate[] = trim($th_text . ' ' . $td_text);
-            }
-        }
+// 安全なHTML解析を使用
+$rows = safe_html_parse($html, 'table.table01 tr');
+$articleDate = array();
+
+foreach ($rows as $row_text) {
+    if (!empty($row_text)) {
+        $articleDate[] = $row_text;
     }
-    
-    return $articleDate;
-} catch (Exception $e) {
-    // エラーが発生した場合は空の配列を返す
-    return array();
 }
+
+return $articleDate;
 }
 
 
@@ -1089,29 +1105,17 @@ if ($html === false || empty($html)) {
     return array();
 }
 
-try {
-    $dom = phpQuery::newDocument($html);
-    
-    $table_data = $dom->find('table.table01');
-    
-    $articleDate = array(); // 配列を初期化
-    
-    if (!empty($dom["table.table01 tr"])) {
-        foreach( $dom["table.table01 tr"] as $value) { 
-            // get table rows    
-            $th_text = pq($value)->find('th:eq(0)')->text();
-            $td_text = pq($value)->find('td:eq(0)')->text();
-            if (!empty($th_text) || !empty($td_text)) {
-                $articleDate[] = trim($th_text . ' ' . $td_text);
-            }
-        }
+// 安全なHTML解析を使用
+$rows = safe_html_parse($html, 'table.table01 tr');
+$articleDate = array();
+
+foreach ($rows as $row_text) {
+    if (!empty($row_text)) {
+        $articleDate[] = $row_text;
     }
-    
-    return $articleDate;
-} catch (Exception $e) {
-    // エラーが発生した場合は空の配列を返す
-    return array();
 }
+
+return $articleDate;
 }
 
 
